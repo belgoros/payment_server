@@ -101,4 +101,11 @@ defmodule PaymentServer.Accounts do
   def change_user(%User{} = user, attrs \\ %{}) do
     User.changeset(user, attrs)
   end
+
+  # dataloader support
+  def data, do: Dataloader.Ecto.new(Repo, query: &query/2)
+
+  defp query(User, _args), do: list_users()
+
+  defp query(queryable, _params), do: queryable
 end
