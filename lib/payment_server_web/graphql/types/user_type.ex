@@ -4,8 +4,8 @@ defmodule PaymentServerWeb.Graphql.Types.UserType do
 
   @desc "A User"
   object :user do
-    field(:id, :id)
-    field(:name, :string)
-    field(:email, :string)
+    field(:id, non_null(:id))
+    field(:name, non_null(:string))
+    field(:email, non_null(:string))
   end
 end
