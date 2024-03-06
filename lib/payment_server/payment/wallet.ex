@@ -6,8 +6,8 @@ defmodule PaymentServer.Payment.Wallet do
   alias PaymentServer.Accounts.User
 
   schema "wallets" do
-    field :currency, Ecto.Enum, values: [:EUR, :USD, :CAD, :BTC]
-    field :units, :integer
+    field :currency, Ecto.Enum, values: [:eur, :usd, :cad, :btc]
+    field :units, :integer, default: 0
     belongs_to :user, User
 
     timestamps()
@@ -15,7 +15,7 @@ defmodule PaymentServer.Payment.Wallet do
 
   @available_attributes [:currency, :units, :user_id]
   @required_attributes [:currency, :units, :user_id]
-  # use Ecto.Enum.values(PaymentServer.Payment.Wallet, :currency)
+
   @doc false
   def changeset(wallet, attrs) do
     wallet
