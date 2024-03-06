@@ -1,6 +1,7 @@
 alias PaymentServer.Accounts.User
 alias PaymentServer.Payment.Wallet
-alias PaymentServer.Payment.Wallet.Currency
+alias PaymentServer.Accounts
+alias PaymentServer.Payment
 
 alias PaymentServer.Repo
 
