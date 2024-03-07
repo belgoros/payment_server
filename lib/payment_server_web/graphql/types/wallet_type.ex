@@ -1,4 +1,4 @@
-defmodule PaymentServerWeb.GraphQl.Types.WalletType do
+defmodule PaymentServerWeb.Graphql.Types.WalletType do
   @moduledoc false
   use Absinthe.Schema.Notation
 
@@ -10,9 +10,9 @@ defmodule PaymentServerWeb.GraphQl.Types.WalletType do
 
   @desc "Accepted currency values"
   enum :currency_type do
-    value :EUR
-    value :USD
-    value :BTC
-    value :CAT
+    value(:EUR)
+    value(:USD)
+    value(:BTC)
+    value(:CAT)
   end
 end
