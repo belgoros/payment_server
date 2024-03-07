@@ -201,4 +201,11 @@ defmodule PaymentServer.Accounts do
   def change_wallet(%Wallet{} = wallet, attrs \\ %{}) do
     Wallet.changeset(wallet, attrs)
   end
+
+  # dataloader support
+  def data, do: Dataloader.Ecto.new(Repo, query: &query/2)
+
+  defp query(User, _args), do: list_users()
+
+  defp query(queryable, _params), do: queryable
 end
