@@ -7,6 +7,7 @@ defmodule PaymentServer.Accounts do
   alias PaymentServer.Repo
 
   alias PaymentServer.Accounts.User
+  alias PaymentServer.Accounts.Wallet
 
   @doc """
   Returns the list of users.
@@ -102,10 +103,102 @@ defmodule PaymentServer.Accounts do
     User.changeset(user, attrs)
   end
 
-  # dataloader support
-  def data, do: Dataloader.Ecto.new(Repo, query: &query/2)
+  @doc """
+  Returns the list of wallets.
 
-  defp query(User, _args), do: list_users()
+  ## Examples
 
-  defp query(queryable, _params), do: queryable
+      iex> list_wallets()
+      [%Wallet{}, ...]
+
+  """
+  def list_wallets do
+    Repo.all(Wallet)
+  end
+
+  @doc """
+  Gets a single wallet.
+
+  Raises `Ecto.NoResultsError` if the Wallet does not exist.
+
+  ## Examples
+
+      iex> get_wallet!(123)
+      %Wallet{}
+
+      iex> get_wallet!(456)
+      ** (Ecto.NoResultsError)
+
+  """
+  def get_wallet!(id), do: Repo.get!(Wallet, id)
+
+  def find_wallet_by_currency(currency) do
+    currency = currency |> String.upcase() |> String.to_atom()
+    Repo.get_by(Wallet, currency: currency)
+  end
+
+  @doc """
+  Creates a wallet.
+
+  ## Examples
+
+      iex> create_wallet(%{field: value})
+      {:ok, %Wallet{}}
+
+      iex> create_wallet(%{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def create_wallet(attrs \\ %{}) do
+    %Wallet{}
+    |> Wallet.changeset(attrs)
+    |> Repo.insert()
+  end
+
+  @doc """
+  Updates a wallet.
+
+  ## Examples
+
+      iex> update_wallet(wallet, %{field: new_value})
+      {:ok, %Wallet{}}
+
+      iex> update_wallet(wallet, %{field: bad_value})
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def update_wallet(%Wallet{} = wallet, attrs) do
+    wallet
+    |> Wallet.changeset(attrs)
+    |> Repo.update()
+  end
+
+  @doc """
+  Deletes a wallet.
+
+  ## Examples
+
+      iex> delete_wallet(wallet)
+      {:ok, %Wallet{}}
+
+      iex> delete_wallet(wallet)
+      {:error, %Ecto.Changeset{}}
+
+  """
+  def delete_wallet(%Wallet{} = wallet) do
+    Repo.delete(wallet)
+  end
+
+  @doc """
+  Returns an `%Ecto.Changeset{}` for tracking wallet changes.
+
+  ## Examples
+
+      iex> change_wallet(wallet)
+      %Ecto.Changeset{data: %Wallet{}}
+
+  """
+  def change_wallet(%Wallet{} = wallet, attrs \\ %{}) do
+    Wallet.changeset(wallet, attrs)
+  end
 end
