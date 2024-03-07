@@ -1,4 +1,4 @@
-defmodule PaymentServer.Payment.Wallet do
+defmodule PaymentServer.Accounts.Wallet do
   @moduledoc false
   use Ecto.Schema
   import Ecto.Changeset
@@ -6,7 +6,7 @@ defmodule PaymentServer.Payment.Wallet do
   alias PaymentServer.Accounts.User
 
   schema "wallets" do
-    field :currency, Ecto.Enum, values: [:eur, :usd, :cad, :btc]
+    field :currency, Ecto.Enum, values: [:EUR, :USD, :CAD, :BTC]
     field :units, :integer, default: 0
     belongs_to :user, User
 

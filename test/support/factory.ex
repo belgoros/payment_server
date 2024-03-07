@@ -2,7 +2,7 @@ defmodule PaymentServer.Factory do
   use ExMachina.Ecto, repo: PaymentServer.Repo
 
   alias PaymentServer.Accounts.User
-  alias PaymentServer.Payment.Wallet
+  alias PaymentServer.Accounts.Wallet
 
   def user_factory do
     %User{

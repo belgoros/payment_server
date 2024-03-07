@@ -1,12 +1,12 @@
-defmodule PaymentServerWeb.Graphql.Resolvers.WalletResolver do
+defmodule PaymentServerWeb.GraphQl.Resolvers.WalletResolver do
   @moduledoc false
-  alias PaymentServer.Payment
+  alias PaymentServer.Accounts
 
   def list_wallets(_parent, _args, _resolution) do
-    {:ok, Payment.list_wallets()}
+    {:ok, Accounts.list_wallets()}
   end
 
   def find_wallet_by_currency(_parent, %{currency: currency}, _resolution) do
-    {:ok, Payment.find_wallet_by_currency(currency)}
+    {:ok, Accounts.find_wallet_by_currency(currency)}
   end
 end
