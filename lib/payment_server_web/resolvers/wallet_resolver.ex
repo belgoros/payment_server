@@ -1,4 +1,4 @@
-defmodule PaymentServerWeb.GraphQl.Resolvers.WalletResolver do
+defmodule PaymentServerWeb.Graphql.Resolvers.WalletResolver do
   @moduledoc false
   alias PaymentServer.Accounts
 
