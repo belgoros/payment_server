@@ -3,7 +3,7 @@ defmodule PaymentServer.Accounts.User do
   use Ecto.Schema
   import Ecto.Changeset
 
-  alias PaymentServer.Payment.Wallet
+  alias PaymentServer.Accounts.Wallet
 
   schema "users" do
     field :email, :string
