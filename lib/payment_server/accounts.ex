@@ -203,7 +203,7 @@ defmodule PaymentServer.Accounts do
   end
 
   # dataloader support
-  def data, do: Dataloader.Ecto.new(Repo, query: &query/2)
+  def data(), do: Dataloader.Ecto.new(Repo, query: &query/2)
 
   defp query(User, _args), do: list_users()
 
