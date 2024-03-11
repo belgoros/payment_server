@@ -3,5 +3,5 @@ defmodule PaymentServerWeb.Dataloader do
 
   alias PaymentServer.Accounts
 
-  def dataloader, do: Dataloader.add_source(Dataloader.new(), Accounts, Accounts.data())
+  def dataloader, do: Dataloader.add_source(Dataloader.new(), Accounts, Accounts.datasource())
 end
