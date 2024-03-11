@@ -6,8 +6,7 @@ defmodule PaymentServer.Accounts do
   import Ecto.Query, warn: false
   alias PaymentServer.Repo
 
-  alias PaymentServer.Accounts.User
-  alias PaymentServer.Accounts.Wallet
+  alias PaymentServer.Accounts.{User, Wallet}
 
   @doc """
   Returns the list of users.
@@ -203,9 +202,9 @@ defmodule PaymentServer.Accounts do
   end
 
   # dataloader support
-  def data(), do: Dataloader.Ecto.new(Repo, query: &query/2)
-
-  defp query(User, _args), do: list_users()
+  def datasource() do
+    Dataloader.Ecto.new(Repo, query: &query/2)
+  end
 
   defp query(queryable, _params), do: queryable
 end
