@@ -1,9 +1,15 @@
 defmodule PaymentServerWeb.Schema do
   @moduledoc false
   use Absinthe.Schema
-  alias PaymentServerWeb.Dataloader
+  alias PaymentServer.Accounts
 
-  def context(ctx), do: Map.put(ctx, :loader, Dataloader.dataloader())
+  def context(ctx) do
+    loader =
+      Dataloader.new()
+      |> Dataloader.add_source(Accounts, Accounts.datasource())
+
+    Map.put(ctx, :loader, loader)
+  end
 
   def plugins, do: [Absinthe.Middleware.Dataloader] ++ Absinthe.Plugin.defaults()
 
