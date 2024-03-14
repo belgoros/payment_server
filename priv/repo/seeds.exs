@@ -1,11 +1,50 @@
-# Script for populating the database. You can run it as:
+alias PaymentServer.Repo
+alias PaymentServer.Accounts.{User, Wallet}
+
 #
-#     mix run priv/repo/seeds.exs
+# USERS
 #
-# Inside the script, you can read and write to any of your
-# repositories directly:
+
+mike =
+  %User{}
+  |> User.changeset(%{
+    name: "mike",
+    email: "mike@example.com"
+  })
+  |> Repo.insert!()
+
+%User{}
+|> User.changeset(%{
+  name: "nicole",
+  email: "nicole@example.com"
+})
+|> Repo.insert!()
+
+%User{}
+|> User.changeset(%{
+  name: "hacker",
+  email: "hacker@example.com"
+})
+|> Repo.insert!()
+
 #
-#     PaymentServer.Repo.insert!(%PaymentServer.SomeSchema{})
+# WALLETS
 #
-# We recommend using the bang functions (`insert!`, `update!`
-# and so on) as they will fail if something goes wrong.
+
+%Wallet{}
+|> Wallet.changeset(%{
+  currency: :EUR,
+  units: 50,
+  user: mike,
+  user_id: mike.id
+})
+|> Repo.insert!()
+
+%Wallet{}
+|> Wallet.changeset(%{
+  currency: :USD,
+  units: 100,
+  user: mike,
+  user_id: mike.id
+})
+|> Repo.insert!()
