@@ -18,8 +18,14 @@ defmodule PaymentServerWeb.Schema do
   import_types(PaymentServerWeb.Graphql.Types.UserType)
   import_types(PaymentServerWeb.Graphql.Types.WalletType)
 
+  import_types(PaymentServerWeb.Graphql.Mutations.UserMutation)
+
   query do
     import_fields(:user_queries)
     import_fields(:wallet_queries)
+  end
+
+  mutation do
+    import_fields(:create_user_mutation)
   end
 end
