@@ -45,7 +45,8 @@ defmodule PaymentServer.MixProject do
       {:absinthe_phoenix, "~> 2.0"},
       {:ex_machina, "~> 2.7", only: :test},
       {:dataloader, "~> 2.0"},
-      {:credo, "~> 1.7", only: [:dev, :test], runtime: false}
+      {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
+      {:req, "~> 0.4.11"}
     ]
   end
 
