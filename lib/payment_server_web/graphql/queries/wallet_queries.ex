@@ -10,7 +10,7 @@ defmodule PaymentServerWeb.Graphql.Queries.WalletQueries do
       resolve(&Resolvers.WalletResolver.list_wallets/3)
     end
 
-    field :wallet, :wallet do
+    field :wallet, list_of(:wallet) do
       arg(:currency, non_null(:string))
       resolve(&Resolvers.WalletResolver.find_wallet_by_currency/3)
     end
