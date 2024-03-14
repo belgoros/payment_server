@@ -9,6 +9,7 @@ defmodule PaymentServerWeb.Graphql.Types.WalletType do
   object :wallet do
     field(:id, non_null(:id))
     field(:currency, non_null(:currency_type))
+    field :units, :integer
     field :user, non_null(:user), resolve: dataloader(Accounts)
   end
 
