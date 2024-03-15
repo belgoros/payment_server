@@ -28,11 +28,11 @@ defmodule PaymentServerWeb.ConnCase do
       import Plug.Conn
       import Phoenix.ConnTest
       import PaymentServerWeb.ConnCase
+      import PaymentServer.Factory
     end
   end
 
-  setup tags do
-    PaymentServer.DataCase.setup_sandbox(tags)
+  setup _tags do
     {:ok, conn: Phoenix.ConnTest.build_conn()}
   end
 end
