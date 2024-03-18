@@ -17,6 +17,7 @@ defmodule PaymentServerWeb.Schema do
   import_types(PaymentServerWeb.Graphql.Queries.WalletQueries)
   import_types(PaymentServerWeb.Graphql.Types.UserType)
   import_types(PaymentServerWeb.Graphql.Types.WalletType)
+  import_types(PaymentServerWeb.Graphql.Types.WalletsTotalType)
 
   import_types(PaymentServerWeb.Graphql.Mutations.UserMutation)
   import_types(PaymentServerWeb.Graphql.Mutations.WalletMutation)
@@ -24,6 +25,7 @@ defmodule PaymentServerWeb.Schema do
   query do
     import_fields(:user_queries)
     import_fields(:wallet_queries)
+    import_fields(:wallets_total)
   end
 
   mutation do

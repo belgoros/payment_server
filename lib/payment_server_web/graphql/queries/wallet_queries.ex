@@ -14,5 +14,11 @@ defmodule PaymentServerWeb.Graphql.Queries.WalletQueries do
       arg(:currency, non_null(:string))
       resolve(&Resolvers.WalletResolver.find_wallet_by_currency/3)
     end
+
+    field :wallets_total, :wallets_total do
+      arg(:currency, non_null(:string))
+      arg(:user_id, non_null(:id))
+      resolve(&Resolvers.WalletResolver.total_worth_in_currency/3)
+    end
   end
 end
