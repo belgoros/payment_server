@@ -21,4 +21,12 @@ defmodule PaymentServerWeb.Graphql.Resolvers.WalletResolver do
         {:ok, wallet}
     end
   end
+
+  def total_worth_in_currency(_parent, %{user_id: user_id, currency: currency}, _resolution) do
+    total =
+      Accounts.get_user!(user_id)
+      |> Accounts.total_worth_of_wallets_for(currency)
+
+    {:ok, %{currency: currency, total: total}}
+  end
 end
