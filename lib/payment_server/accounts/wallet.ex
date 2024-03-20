@@ -9,7 +9,7 @@ defmodule PaymentServer.Accounts.Wallet do
 
   schema "wallets" do
     field :currency, Ecto.Enum, values: @accepted_currencies
-    field :units, :integer, default: 0
+    field :units, :float, default: 0.0
     belongs_to :user, User
 
     timestamps()
