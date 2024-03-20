@@ -12,5 +12,14 @@ defmodule PaymentServerWeb.Graphql.Mutations.WalletMutation do
 
       resolve(&Resolvers.WalletResolver.create_wallet/3)
     end
+
+    @desc "Send money from wallet to wallet"
+    field :send_money, :sent_money do
+      arg(:sender_wallet_id, non_null(:integer))
+      arg(:receiver_wallet_id, non_null(:integer))
+      arg(:amount, non_null(:float))
+
+      resolve(&Resolvers.WalletResolver.send_money/3)
+    end
   end
 end
