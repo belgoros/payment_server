@@ -29,4 +29,33 @@ defmodule PaymentServerWeb.Graphql.Resolvers.WalletResolver do
 
     {:ok, %{currency: currency, total: total}}
   end
+
+  def send_money(
+        _parent,
+        %{
+          sender_wallet_id: sender_wallet_id,
+          receiver_wallet_id: receiver_wallet_id,
+          amount: amount
+        },
+        _resolution
+      ) do
+    sender_wallet = Accounts.get_wallet!(sender_wallet_id)
+    receiver_wallet = Accounts.get_wallet!(receiver_wallet_id)
+    {:ok, Accounts.send_money(sender_wallet, receiver_wallet, amount)}
+
+    case Accounts.send_money(sender_wallet, receiver_wallet, amount) do
+      {:error, changeset} ->
+        {:error,
+         message: "Could not send money", details: ChangesetErrors.error_details(changeset)}
+
+      {:ok, wallet} ->
+        {:ok,
+         %{
+           wallet: wallet,
+           amount_received: amount,
+           currency: sender_wallet.currency,
+           sender_wallet_id: sender_wallet_id
+         }}
+    end
+  end
 end

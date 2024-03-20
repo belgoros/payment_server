@@ -21,6 +21,15 @@ defmodule PaymentServer.Accounts do
     Repo.all(User)
   end
 
+  def send_money(%Wallet{} = sender_wallet, %Wallet{} = receiver_wallet, amount) do
+    if sender_wallet.units < amount,
+      do: raise("Wallet credit is insufficient to send #{amount} #{sender_wallet.currency}!")
+
+    converted_amount = exchange_rate(sender_wallet.currency, receiver_wallet.currency) * amount
+
+    update_wallet(receiver_wallet, %{units: converted_amount + receiver_wallet.units})
+  end
+
   def total_worth_of_wallets_for(%User{} = user, to_currency) do
     user_wallets = get_user_wallets(user.id)
     non_convertible_wallets = Enum.filter(user_wallets, &(&1.currency == to_currency))
