@@ -28,7 +28,7 @@ defmodule PaymentServerWeb.Graphql.Queries.WalletQueriesTest do
 
   @wallets_by_currency_query """
   query {
-    wallet(currency: "eur") {
+    wallets_by_currency(currency: "eur") {
      id
      currency
      units
@@ -93,7 +93,7 @@ defmodule PaymentServerWeb.Graphql.Queries.WalletQueriesTest do
     {:ok, response} =
       Absinthe.run(@wallets_by_currency_query, PaymentServerWeb.Schema)
 
-    wallets = get_in(response, [:data, "wallet"])
+    wallets = get_in(response, [:data, "wallets_by_currency"])
 
     assert 3 == length(wallets)
   end
