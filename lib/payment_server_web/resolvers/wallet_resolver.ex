@@ -4,7 +4,9 @@ defmodule PaymentServerWeb.Graphql.Resolvers.WalletResolver do
   alias PaymentServerWeb.Graphql.Schema.ChangesetErrors
 
   def list_wallets(_parent, _args, _resolution) do
-    {:ok, Accounts.list_wallets()}
+    wallets = Accounts.list_wallets()
+    Enum.each(wallets, &publish_rates_updated(&1))
+    {:ok, wallets}
   end
 
   def find_wallet_by_currency(_parent, %{currency: currency}, _resolution) do
@@ -75,12 +77,18 @@ defmodule PaymentServerWeb.Graphql.Resolvers.WalletResolver do
   end
 
   def publish_currency_updated(wallet) do
-    IO.puts("Publishing to topic of currency: #{wallet.currency}")
-
     Absinthe.Subscription.publish(
       PaymentServerWeb.Endpoint,
       wallet,
       currency_rate_update: "currency-#{wallet.currency}"
+    )
+  end
+
+  def publish_rates_updated(wallet) do
+    Absinthe.Subscription.publish(
+      PaymentServerWeb.Endpoint,
+      wallet,
+      rates_update: "rates"
     )
   end
 end

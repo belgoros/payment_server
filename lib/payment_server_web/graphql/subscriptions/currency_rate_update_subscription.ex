@@ -14,5 +14,14 @@ defmodule PaymentServerWeb.Graphql.Subscriptions.CurrencyRateUpdateSubscription 
 
       resolve(fn wallet, _, _ -> {:ok, wallet} end)
     end
+
+    @desc "Subscribe to rates update"
+    field :rates_update, :wallet do
+      config(fn _args, _res ->
+        {:ok, topic: "rates"}
+      end)
+
+      resolve(fn wallet, _, _ -> {:ok, wallet} end)
+    end
   end
 end
