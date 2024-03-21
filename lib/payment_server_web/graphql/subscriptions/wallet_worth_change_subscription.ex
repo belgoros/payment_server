@@ -1,9 +1,9 @@
-defmodule PaymentServerWeb.Graphql.Subscriptions.UserTotalWorthChangeSubscription do
+defmodule PaymentServerWeb.Graphql.Subscriptions.WalletWorthChangeSubscription do
   @moduledoc false
 
   use Absinthe.Schema.Notation
 
-  object :user_total_worth_change_subscription do
+  object :wallet_worth_change_subscription do
     @desc "Subscribe to wallet worth change"
     field :wallet_worth_change, :wallet do
       arg(:wallet_id, non_null(:id))

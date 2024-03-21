@@ -24,7 +24,8 @@ defmodule PaymentServerWeb.Schema do
   import_types(PaymentServerWeb.Graphql.Mutations.UserMutation)
   import_types(PaymentServerWeb.Graphql.Mutations.WalletMutation)
 
-  import_types(PaymentServerWeb.Graphql.Subscriptions.UserTotalWorthChangeSubscription)
+  import_types(PaymentServerWeb.Graphql.Subscriptions.WalletWorthChangeSubscription)
+  import_types(PaymentServerWeb.Graphql.Subscriptions.CurrencyRateUpdateSubscription)
 
   query do
     import_fields(:user_queries)
@@ -38,6 +39,7 @@ defmodule PaymentServerWeb.Schema do
   end
 
   subscription do
-    import_fields(:user_total_worth_change_subscription)
+    import_fields(:wallet_worth_change_subscription)
+    import_fields(:currency_rate_update_subscription)
   end
 end
