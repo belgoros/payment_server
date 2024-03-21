@@ -49,6 +49,9 @@ defmodule PaymentServerWeb.Graphql.Resolvers.WalletResolver do
          message: "Could not send money", details: ChangesetErrors.error_details(changeset)}
 
       {:ok, wallet} ->
+        publish_wallet_worth_changed(sender_wallet)
+        publish_wallet_worth_changed(receiver_wallet)
+
         {:ok,
          %{
            wallet: wallet,
@@ -57,5 +60,13 @@ defmodule PaymentServerWeb.Graphql.Resolvers.WalletResolver do
            sender_wallet_id: sender_wallet_id
          }}
     end
+  end
+
+  defp publish_wallet_worth_changed(wallet) do
+    Absinthe.Subscription.publish(
+      PaymentServerWeb.Endpoint,
+      wallet,
+      wallet_worth_change: "wallet-#{wallet.id}"
+    )
   end
 end
