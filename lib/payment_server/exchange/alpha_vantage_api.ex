@@ -22,11 +22,13 @@ defmodule PaymentServer.Exchange.AlphaVantageApi do
   end
 
   defp function_parameter(uri) do
-    URI.append_query(uri, "function=#{Application.fetch_env!(:payment_server, :function)}")
+    function_param = exchange_server_options() |> Keyword.get(:function)
+    URI.append_query(uri, "function=#{function_param}")
   end
 
   defp api_key_parameter(uri) do
-    URI.append_query(uri, "apikey=#{Application.fetch_env!(:payment_server, :api_key)}")
+    api_key_param = exchange_server_options() |> Keyword.get(:api_key)
+    URI.append_query(uri, "apikey=#{api_key_param}")
   end
 
   defp from_currency_parameter(uri, from_currency),
@@ -34,4 +36,7 @@ defmodule PaymentServer.Exchange.AlphaVantageApi do
 
   defp to_currency_parameter(uri, to_currency),
     do: URI.append_query(uri, "to_currency=#{to_currency}")
+
+  defp exchange_server_options(),
+    do: Application.get_env(:payment_server, :exchange_server_options, [])
 end
