@@ -77,10 +77,15 @@ defmodule PaymentServerWeb.Graphql.Resolvers.WalletResolver do
   end
 
   def publish_currency_updated(wallet) do
+    currency =
+      wallet.currency
+      |> Atom.to_string()
+      |> String.downcase()
+
     Absinthe.Subscription.publish(
       PaymentServerWeb.Endpoint,
       wallet,
-      currency_rate_update: "currency-#{wallet.currency}"
+      currency_rate_update: "currency-#{currency}"
     )
   end
 
