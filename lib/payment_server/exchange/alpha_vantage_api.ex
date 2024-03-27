@@ -4,7 +4,7 @@ defmodule PaymentServer.Exchange.AlphaVantageApi do
   """
   @api_url "http://localhost:4001/query"
 
-  def get_rates(from_currency \\ "USD", to_currency \\ JPY) do
+  def get_rates(from_currency \\ "USD", to_currency \\ "JPY") do
     {:ok, response} =
       build_search_url(from_currency, to_currency)
       |> Req.get()
