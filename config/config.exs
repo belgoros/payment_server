@@ -30,10 +30,6 @@ config :phoenix, :json_library, Jason
 
 # Alpha Vantage settings
 config :payment_server,
-  api_key: "demo",
-  function: "CURRENCY_EXCHANGE_RATE"
-
-config :payment_server,
   exchange_server_options: [
     api_key: "demo",
     function: "CURRENCY_EXCHANGE_RATE"
