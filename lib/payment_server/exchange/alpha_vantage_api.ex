@@ -1,9 +1,11 @@
 defmodule PaymentServer.Exchange.AlphaVantageApi do
+  @behaviour PaymentServer.Exchange.MonitorApi
   @moduledoc """
   This is a Alpha Vantage API module which provides the exchange rates data
   """
   @api_url "http://localhost:4001/query"
 
+  @impl true
   def get_rates(from_currency \\ "USD", to_currency \\ "JPY") do
     {:ok, response} =
       build_search_url(from_currency, to_currency)
