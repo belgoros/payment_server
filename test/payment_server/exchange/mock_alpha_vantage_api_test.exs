@@ -3,7 +3,11 @@ defmodule PaymentServer.Exchange.MockAlphaVantageApiTest do
 
   test "it should call mocked API" do
     api_module =
-      Application.get_env(:payment_server, :api_module, PaymentServer.Exchange.AlphaVantageApi)
+      Application.get_env(
+        :payment_server,
+        :api_module,
+        PaymentServer.Exchange.MockAlphaVantageApi
+      )
 
     response = api_module.get_rates("eur", "usd")
     IO.inspect(response)
