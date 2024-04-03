@@ -10,6 +10,7 @@ defmodule PaymentServer.Exchange.MockAlphaVantageApiTest do
       )
 
     response = api_module.get_rates("eur", "usd")
-    IO.inspect(response)
+    %{status: status} = response
+    assert status == 200
   end
 end
