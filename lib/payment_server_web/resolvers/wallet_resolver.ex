@@ -47,7 +47,6 @@ defmodule PaymentServerWeb.Graphql.Resolvers.WalletResolver do
       ) do
     sender_wallet = Accounts.get_wallet!(sender_wallet_id)
     receiver_wallet = Accounts.get_wallet!(receiver_wallet_id)
-    #{:ok, Accounts.send_money(sender_wallet, receiver_wallet, amount)}
 
     case Accounts.send_money(sender_wallet, receiver_wallet, amount) do
       {:error, changeset} ->

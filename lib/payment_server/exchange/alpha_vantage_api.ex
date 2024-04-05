@@ -6,12 +6,13 @@ defmodule PaymentServer.Exchange.AlphaVantageApi do
   @api_url "http://localhost:4001/query"
 
   @impl true
-  def get_rates(from_currency \\ "USD", to_currency \\ "JPY") do
+  def get_rate(from_currency \\ "USD", to_currency \\ "JPY") do
     {:ok, response} =
       build_search_url(from_currency, to_currency)
       |> Req.get()
 
-    response
+    rate = parse(response)
+    %{rate: rate}
   end
 
   defp build_search_url(from_currency, to_currency) do
@@ -25,9 +26,19 @@ defmodule PaymentServer.Exchange.AlphaVantageApi do
     |> Enum.into(%{})
     |> Map.put_new(:from_currency, from_currency)
     |> Map.put_new(:to_currency, to_currency)
-    |> URI.encode_query() 
+    |> URI.encode_query()
   end
 
   defp exchange_server_options(),
     do: Application.get_env(:payment_server, :exchange_server_options, [])
+
+  defp parse(%Req.Response{} = response) do
+    with {:ok, 200} <- Map.fetch(response, :status),
+         {:ok, body} <- Map.fetch(response, :body) do
+      rate = get_in(body, ["Realtime Currency Exchange Rate", "5. Exchange Rate"])
+      String.to_float(rate)
+    else
+      _ -> IO.puts("Error when fetching the API response")
+    end
+  end
 end

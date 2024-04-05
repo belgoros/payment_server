@@ -4,9 +4,6 @@ defmodule PaymentServer.Exchange.RatesMonitor do
   """
   use GenServer
 
-  # alias PaymentServer.Exchange.AlphaVantageApi
-  alias PaymentServer.Exchange.Parser
-
   @default_server :rates_monitor
   @refresh_interval :timer.seconds(5)
 
@@ -61,8 +58,7 @@ defmodule PaymentServer.Exchange.RatesMonitor do
     api_module =
       Application.get_env(:payment_server, :api_module, PaymentServer.Exchange.AlphaVantageApi)
 
-    response = api_module.get_rates(from_currency, to_currency)
-    rate = Parser.parse(response)
+    rate = api_module.get_rate(from_currency, to_currency)
 
     %{state | from_currency: from_currency, to_currency: to_currency, rate: rate}
   end
