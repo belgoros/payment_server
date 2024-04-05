@@ -16,28 +16,17 @@ defmodule PaymentServer.Exchange.AlphaVantageApi do
 
   defp build_search_url(from_currency, to_currency) do
     URI.parse(@api_url)
-    |> function_parameter()
-    |> from_currency_parameter(from_currency)
-    |> to_currency_parameter(to_currency)
-    |> api_key_parameter()
+    |> URI.append_query(query_params(from_currency, to_currency))
     |> URI.to_string()
   end
 
-  defp function_parameter(uri) do
-    function_param = exchange_server_options() |> Keyword.get(:function)
-    URI.append_query(uri, "function=#{function_param}")
+  defp query_params(from_currency, to_currency) do
+    exchange_server_options()
+    |> Enum.into(%{})
+    |> Map.put_new(:from_currency, from_currency)
+    |> Map.put_new(:to_currency, to_currency)
+    |> URI.encode_query() 
   end
-
-  defp api_key_parameter(uri) do
-    api_key_param = exchange_server_options() |> Keyword.get(:api_key)
-    URI.append_query(uri, "apikey=#{api_key_param}")
-  end
-
-  defp from_currency_parameter(uri, from_currency),
-    do: URI.append_query(uri, "from_currency=#{from_currency}")
-
-  defp to_currency_parameter(uri, to_currency),
-    do: URI.append_query(uri, "to_currency=#{to_currency}")
 
   defp exchange_server_options(),
     do: Application.get_env(:payment_server, :exchange_server_options, [])
