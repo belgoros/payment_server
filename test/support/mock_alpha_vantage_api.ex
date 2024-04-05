@@ -5,7 +5,7 @@ defmodule PaymentServer.Exchange.MockAlphaVantageApi do
   @behaviour PaymentServer.Exchange.MonitorApi
 
   def get_rates(_from_currency, _to_currency) do
-    %{
+    %Req.Response{
       status: 200,
       headers: %{
         "cache-control" => ["max-age=0, private, must-revalidate"],

@@ -17,7 +17,7 @@ defmodule PaymentServer.Exchange.AlphaVantageApiTest do
   end
 
   defp mocked_response(rate) do
-    %{
+    %Req.Response{
       status: 200,
       body: %{
         "Realtime Currency Exchange Rate" => %{
