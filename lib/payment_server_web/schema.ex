@@ -17,6 +17,7 @@ defmodule PaymentServerWeb.Schema do
   import_types(PaymentServerWeb.Graphql.Queries.WalletQueries)
 
   import_types(PaymentServerWeb.Graphql.Types.UserType)
+  import_types(PaymentServerWeb.Graphql.Types.CurrencyType)
   import_types(PaymentServerWeb.Graphql.Types.WalletType)
   import_types(PaymentServerWeb.Graphql.Types.WalletsTotalType)
   import_types(PaymentServerWeb.Graphql.Types.SentMoneyType)
