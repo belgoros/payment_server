@@ -2,6 +2,8 @@ defmodule PaymentServerWeb.Graphql.Resolvers.WalletResolver do
   @moduledoc false
   alias PaymentServer.Accounts
   alias PaymentServerWeb.Graphql.Schema.ChangesetErrors
+  alias PaymentServer.Ledger.Transaction
+  alias PaymentServer.Ledger
 
   def list_wallets(_parent, _args, _resolution) do
     wallets = Accounts.list_wallets()
@@ -31,7 +33,7 @@ defmodule PaymentServerWeb.Graphql.Resolvers.WalletResolver do
   def total_worth_in_currency(_parent, %{user_id: user_id, currency: currency}, _resolution) do
     total =
       Accounts.get_user!(user_id)
-      |> Accounts.total_worth_of_wallets_for(currency)
+      |> Transaction.total_worth_of_wallets_for(currency)
 
     {:ok, %{currency: currency, total: total}}
   end
@@ -48,7 +50,7 @@ defmodule PaymentServerWeb.Graphql.Resolvers.WalletResolver do
     sender_wallet = Accounts.get_wallet!(sender_wallet_id)
     receiver_wallet = Accounts.get_wallet!(receiver_wallet_id)
 
-    case Accounts.send_money(sender_wallet, receiver_wallet, amount) do
+    case Ledger.send_money(sender_wallet, receiver_wallet, amount) do
       {:error, changeset} ->
         {:error,
          message: "Could not send money", details: ChangesetErrors.error_details(changeset)}
