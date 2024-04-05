@@ -27,6 +27,7 @@ defmodule PaymentServer.Accounts do
 
     converted_amount = exchange_rate(sender_wallet.currency, receiver_wallet.currency) * amount
 
+    update_wallet(sender_wallet, %{units: sender_wallet.units - amount})
     update_wallet(receiver_wallet, %{units: converted_amount + receiver_wallet.units})
   end
 
