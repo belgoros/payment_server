@@ -50,10 +50,8 @@ defmodule PaymentServer.Accounts do
   end
 
   defp exchange_rate(from_currency, to_currency) do
-    rates_monitor_rates =
-      PaymentServer.Exchange.RatesMonitor.get_rates(from_currency, to_currency)
-
-    rates_monitor_rates.rate
+    %{rate: rate} = PaymentServer.Exchange.AlphaVantageApi.get_rate(from_currency, to_currency)
+    rate
   end
 
   defp get_user_wallets(id) do
