@@ -5,7 +5,7 @@ defmodule PaymentServer.Ledger do
 
   alias alias PaymentServer.Accounts
   alias alias PaymentServer.Accounts.Wallet
-  alias PaymentServer.Exchange.AlphaVantageApi
+  alias PaymentServer.Bound
 
   def send_money(%Wallet{} = sender_wallet, %Wallet{} = receiver_wallet, amount) do
     if sender_wallet.units < amount,
@@ -18,7 +18,7 @@ defmodule PaymentServer.Ledger do
   end
 
   defp exchange_rate(from_currency, to_currency) do
-    %{rate: rate} = AlphaVantageApi.get_rate(from_currency, to_currency)
+    %{rate: rate} = Bound.get_rate(from_currency, to_currency)
     rate
   end
 
