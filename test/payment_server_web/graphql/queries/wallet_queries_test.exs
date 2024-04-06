@@ -28,7 +28,7 @@ defmodule PaymentServerWeb.Graphql.Queries.WalletQueriesTest do
 
   @wallets_by_currency_query """
   query {
-    wallets_by_currency(currency: "eur") {
+    wallets_by_currency(currency: EUR) {
      id
      currency
      units
@@ -86,9 +86,9 @@ defmodule PaymentServerWeb.Graphql.Queries.WalletQueriesTest do
     assert expected === response
   end
 
-  test "It should return a list of wallets by currency", %{conn: _conn} do
-    insert_list(3, :wallet, %{currency: "EUR"})
-    insert(:wallet, currency: "USD")
+  test "it should return a list of wallets by currency", %{conn: _conn} do
+    insert_list(3, :wallet, %{currency: :EUR})
+    insert(:wallet, currency: :USD)
 
     {:ok, response} =
       Absinthe.run(@wallets_by_currency_query, PaymentServerWeb.Schema)
