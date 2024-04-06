@@ -11,8 +11,8 @@ defmodule PaymentServerWeb.Graphql.Resolvers.WalletResolver do
     {:ok, wallets}
   end
 
-  def find_wallet_by_currency(_parent, %{currency: currency}, _resolution) do
-    wallets_by_currency = Accounts.find_wallet_by_currency(currency)
+  def find_wallets_by_currency(_parent, %{currency: currency}, _resolution) do
+    wallets_by_currency = Accounts.find_wallets_by_currency(currency)
 
     Enum.each(wallets_by_currency, &publish_currency_updated(&1))
 
@@ -78,15 +78,10 @@ defmodule PaymentServerWeb.Graphql.Resolvers.WalletResolver do
   end
 
   def publish_currency_updated(wallet) do
-    currency =
-      wallet.currency
-      |> Atom.to_string()
-      |> String.downcase()
-
     Absinthe.Subscription.publish(
       PaymentServerWeb.Endpoint,
       wallet,
-      currency_rate_update: "currency-#{currency}"
+      currency_rate_update: "currency-#{wallet.currency}"
     )
   end
 

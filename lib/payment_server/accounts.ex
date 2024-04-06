@@ -136,9 +136,7 @@ defmodule PaymentServer.Accounts do
   """
   def get_wallet!(id), do: Repo.get!(Wallet, id)
 
-  def find_wallet_by_currency(currency) do
-    currency = currency |> String.upcase() |> String.to_atom()
-
+  def find_wallets_by_currency(currency) do
     Wallet
     |> where(currency: ^currency)
     |> Repo.all()
