@@ -5,8 +5,8 @@ defmodule PaymentServer.Accounts do
 
   import Ecto.Query, warn: false
   alias PaymentServer.Repo
-
   alias PaymentServer.Accounts.{User, Wallet}
+  alias EctoShorts.Actions
 
   @doc """
   Returns the list of users.
@@ -21,9 +21,17 @@ defmodule PaymentServer.Accounts do
     Repo.all(User)
   end
 
+  @doc """
+  Returns the list of wallets for a specific User ID.
+
+  ## Examples
+
+      iex> get_user_wallets(123)
+      [%Wallet{}, ...]
+
+  """
   def get_user_wallets(user_id) do
-    query = from(w in Wallet, where: w.user_id == ^user_id)
-    Repo.all(query)
+    Actions.all(Wallet, %{user_id: user_id})
   end
 
   @doc """
@@ -136,10 +144,16 @@ defmodule PaymentServer.Accounts do
   """
   def get_wallet!(id), do: Repo.get!(Wallet, id)
 
+  @doc """
+  Returns the list of wallets for the specific currency
+
+  ## Examples
+
+      iex> find_wallets_by_currency(:USD)
+      [%Wallet{}, ...]
+  """
   def find_wallets_by_currency(currency) do
-    Wallet
-    |> where(currency: ^currency)
-    |> Repo.all()
+    Actions.all(Wallet, %{currency: currency})
   end
 
   @doc """
