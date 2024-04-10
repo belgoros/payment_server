@@ -4,7 +4,8 @@ defmodule PaymentServer.Repo.Migrations.CreateWallets do
   def change do
     create table(:wallets) do
       add :currency, :string
-      add :units, :float
+      # ,precision: 10, scale: 2, default: 0.0
+      add :units, :decimal, default: 0.0
       add :user_id, references(:users, on_delete: :nothing)
 
       timestamps()

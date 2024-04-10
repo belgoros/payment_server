@@ -13,6 +13,7 @@ defmodule PaymentServerWeb.Schema do
 
   def plugins, do: [Absinthe.Middleware.Dataloader] ++ Absinthe.Plugin.defaults()
 
+  import_types(Absinthe.Type.Custom)
   import_types(PaymentServerWeb.Graphql.Queries.UserQueries)
   import_types(PaymentServerWeb.Graphql.Queries.WalletQueries)
 

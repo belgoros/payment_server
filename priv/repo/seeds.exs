@@ -34,7 +34,7 @@ mike =
 %Wallet{}
 |> Wallet.changeset(%{
   currency: :EUR,
-  units: 50.0,
+  units: Decimal.from_float(50.0),
   user: mike,
   user_id: mike.id
 })
@@ -43,7 +43,7 @@ mike =
 %Wallet{}
 |> Wallet.changeset(%{
   currency: :USD,
-  units: 100.0,
+  units: Decimal.from_float(100.0),
   user: mike,
   user_id: mike.id
 })

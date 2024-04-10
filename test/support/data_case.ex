@@ -24,6 +24,7 @@ defmodule PaymentServer.DataCase do
       import Ecto.Changeset
       import Ecto.Query
       import PaymentServer.DataCase
+      import PaymentServer.TestHelpers
     end
   end
 

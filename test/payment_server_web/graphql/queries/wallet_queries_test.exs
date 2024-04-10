@@ -50,7 +50,7 @@ defmodule PaymentServerWeb.Graphql.Queries.WalletQueriesTest do
               %{
                 "id" => Integer.to_string(wallet.id),
                 "currency" => Atom.to_string(wallet.currency),
-                "units" => wallet.units
+                "units" => units_to_string(wallet.units)
               }
             ]
           }
@@ -73,7 +73,7 @@ defmodule PaymentServerWeb.Graphql.Queries.WalletQueriesTest do
             %{
               "id" => Integer.to_string(wallet.id),
               "currency" => Atom.to_string(wallet.currency),
-              "units" => wallet.units,
+              "units" => units_to_string(wallet.units),
               "user" => %{
                 "email" => wallet.user.email,
                 "name" => wallet.user.name
