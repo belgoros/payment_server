@@ -67,7 +67,7 @@ defmodule PaymentServerWeb.Graphql.Queries.UserQueriesTest do
               "wallets" => [
                 %{
                   "currency" => Atom.to_string(wallet.currency),
-                  "units" => wallet.units
+                  "units" => units_to_string(wallet.units)
                 }
               ]
             }
