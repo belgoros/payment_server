@@ -8,13 +8,16 @@ defmodule PaymentServer.Ledger do
   alias PaymentServer.Bound
 
   def send_money(%Wallet{} = sender_wallet, %Wallet{} = receiver_wallet, amount) do
-    if sender_wallet.units < amount,
+    if Decimal.lt?(sender_wallet.units, amount),
       do: raise("Wallet credit is insufficient to send #{amount} #{sender_wallet.currency}!")
 
-    converted_amount = exchange_rate(sender_wallet.currency, receiver_wallet.currency) * amount
+    converted_amount =
+      exchange_rate(sender_wallet.currency, receiver_wallet.currency)
+      |> Decimal.from_float()
+      |> Decimal.mult(amount)
 
-    update_wallet(sender_wallet, %{units: sender_wallet.units - amount})
-    update_wallet(receiver_wallet, %{units: converted_amount + receiver_wallet.units})
+    update_wallet(sender_wallet, %{units: Decimal.sub(sender_wallet.units, amount)})
+    update_wallet(receiver_wallet, %{units: Decimal.add(converted_amount, receiver_wallet.units)})
   end
 
   defp exchange_rate(from_currency, to_currency) do
