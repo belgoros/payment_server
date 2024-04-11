@@ -27,4 +27,4 @@ config :logger, level: :warning
 config :phoenix, :plug_init_mode, :runtime
 
 config :payment_server,
-  api_module: PaymentServer.Exchange.MockAlphaVantageApi
+  exchange_api: PaymentServer.Exchange.MockAlphaVantageApi
