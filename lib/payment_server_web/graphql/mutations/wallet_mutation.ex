@@ -9,7 +9,6 @@ defmodule PaymentServerWeb.Graphql.Mutations.WalletMutation do
     field :create_wallet, :wallet do
       arg(:currency, non_null(:currency_type))
       arg(:user_id, non_null(:id))
-      # , default_value: 0.0)
       arg(:units, :decimal)
 
       resolve(&Resolvers.WalletResolver.create_wallet/3)
