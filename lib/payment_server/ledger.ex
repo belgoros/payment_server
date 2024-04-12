@@ -8,18 +8,15 @@ defmodule PaymentServer.Ledger do
   alias PaymentServer.Bound
 
   def send_money(%Wallet{} = sender_wallet, %Wallet{} = receiver_wallet, amount) do
-    if Decimal.lt?(sender_wallet.units, amount) do
+    amount_to_pay = convert_amount(sender_wallet, receiver_wallet, amount)
+
+    if Decimal.lt?(sender_wallet.units, amount_to_pay) do
       raise_wallet_credit_error(sender_wallet, amount)
     else
-      converted_amount =
-        exchange_rate(sender_wallet.currency, receiver_wallet.currency)
-        |> Decimal.from_float()
-        |> Decimal.mult(amount)
-
-      update_wallet(sender_wallet, %{units: Decimal.sub(sender_wallet.units, amount)})
+      update_wallet(sender_wallet, %{units: Decimal.sub(sender_wallet.units, amount_to_pay)})
 
       update_wallet(receiver_wallet, %{
-        units: Decimal.add(converted_amount, receiver_wallet.units)
+        units: Decimal.add(amount_to_pay, receiver_wallet.units)
       })
     end
   end
@@ -44,5 +41,18 @@ defmodule PaymentServer.Ledger do
 
   defp update_wallet(%Wallet{} = wallet, attrs) do
     Accounts.update_wallet(wallet, attrs)
+  end
+
+  defp convert_amount(sender_wallet, receiver_wallet, amount) do
+    rate =
+      if sender_wallet.currency == receiver_wallet.currency do
+        1.0
+      else
+        exchange_rate(sender_wallet.currency, receiver_wallet.currency)
+      end
+
+    rate
+    |> Decimal.from_float()
+    |> Decimal.mult(amount)
   end
 end
