@@ -6,6 +6,6 @@ defmodule PaymentServer.Exchange.MockAlphaVantageApi do
 
   @impl true
   def get_rate(_from_currency, _to_currency) do
-    %{rate: 1.50}
+    %{rate: 2.0}
   end
 end
