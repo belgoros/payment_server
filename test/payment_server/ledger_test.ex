@@ -30,7 +30,7 @@ defmodule PaymentServer.LedgerTest do
     updated_sender_wallet = Accounts.get_wallet!(sender_wallet.id)
     updated_receiver_wallet = Accounts.get_wallet!(receiver_wallet.id)
 
-    assert Decimal.eq?(updated_sender_wallet.units, 30)
+    assert Decimal.eq?(updated_sender_wallet.units, 40)
     assert Decimal.eq?(updated_receiver_wallet.units, 70)
   end
 end

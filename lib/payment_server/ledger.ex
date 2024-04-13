@@ -8,15 +8,14 @@ defmodule PaymentServer.Ledger do
   alias PaymentServer.Bound
 
   def send_money(%Wallet{} = sender_wallet, %Wallet{} = receiver_wallet, amount) do
-    amount_to_pay = convert_amount(sender_wallet, receiver_wallet, amount)
-
-    if Decimal.lt?(sender_wallet.units, amount_to_pay) do
+    if Decimal.lt?(sender_wallet.units, amount) do
       raise_wallet_credit_error(sender_wallet, amount)
     else
-      update_wallet(sender_wallet, %{units: Decimal.sub(sender_wallet.units, amount_to_pay)})
+      converted_amount = convert_amount(sender_wallet, receiver_wallet, amount)
+      update_wallet(sender_wallet, %{units: Decimal.sub(sender_wallet.units, amount)})
 
       update_wallet(receiver_wallet, %{
-        units: Decimal.add(amount_to_pay, receiver_wallet.units)
+        units: Decimal.add(converted_amount, receiver_wallet.units)
       })
     end
   end
