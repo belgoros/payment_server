@@ -6,6 +6,7 @@ defmodule PaymentServerWeb.Graphql.Types.SentMoneyType do
   object :sent_money do
     field :sender_wallet_id, :id
     field :amount_received, :decimal
+    field :currency, :currency_type
     field :wallet, :wallet
   end
 end
