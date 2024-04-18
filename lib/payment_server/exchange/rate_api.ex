@@ -1,4 +1,4 @@
-defmodule PaymentServer.Exchange.MonitorApi do
+defmodule PaymentServer.Exchange.RateApi do
   @moduledoc """
   Handles Exchange server API calls
   """

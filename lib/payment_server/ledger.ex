@@ -5,7 +5,7 @@ defmodule PaymentServer.Ledger do
 
   alias alias PaymentServer.Accounts
   alias alias PaymentServer.Accounts.Wallet
-  alias PaymentServer.Bound
+  alias PaymentServer.Exchange.ApiEnvironmentHandler
 
   def send_money(%Wallet{} = sender_wallet, %Wallet{} = receiver_wallet, amount) do
     if Decimal.lt?(sender_wallet.units, amount) do
@@ -34,7 +34,7 @@ defmodule PaymentServer.Ledger do
   end
 
   defp exchange_rate(from_currency, to_currency) do
-    %{rate: rate} = Bound.get_rate(from_currency, to_currency)
+    %{rate: rate} = ApiEnvironmentHandler.get_rate(from_currency, to_currency)
     rate
   end
 

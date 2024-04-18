@@ -2,7 +2,7 @@ defmodule PaymentServer.Ledger.Transaction do
   @moduledoc false
   alias alias PaymentServer.Accounts
   alias PaymentServer.Accounts.User
-  alias PaymentServer.Bound
+  alias PaymentServer.Exchange.ApiEnvironmentHandler
 
   def total_worth_of_wallets_for(%User{} = user, to_currency) do
     user_wallets = Accounts.get_user_wallets(user.id)
@@ -23,7 +23,7 @@ defmodule PaymentServer.Ledger.Transaction do
   end
 
   defp exchange_rate(from_currency, to_currency) do
-    %{rate: rate} = Bound.get_rate(from_currency, to_currency)
+    %{rate: rate} = ApiEnvironmentHandler.get_rate(from_currency, to_currency)
     rate
   end
 end

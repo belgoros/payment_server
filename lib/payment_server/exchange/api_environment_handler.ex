@@ -1,4 +1,4 @@
-defmodule PaymentServer.Bound do
+defmodule PaymentServer.Exchange.ApiEnvironmentHandler do
   @moduledoc false
   def get_rate(from_currency, to_currency) do
     exchange_api_impl().get_rate(from_currency, to_currency)

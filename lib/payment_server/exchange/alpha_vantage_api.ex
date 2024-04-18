@@ -1,5 +1,5 @@
 defmodule PaymentServer.Exchange.AlphaVantageApi do
-  @behaviour PaymentServer.Exchange.MonitorApi
+  @behaviour PaymentServer.Exchange.RateApi
   @moduledoc """
   This is a Alpha Vantage API module which provides the exchange rates data
   """
