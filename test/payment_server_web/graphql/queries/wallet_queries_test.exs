@@ -36,7 +36,7 @@ defmodule PaymentServerWeb.Graphql.Queries.WalletQueriesTest do
    }
   """
 
-  describe "List wallets" do
+  describe "Listing wallets" do
     test "It should return a list of wallets", %{conn: _conn} do
       wallet = insert(:wallet)
 
@@ -58,43 +58,43 @@ defmodule PaymentServerWeb.Graphql.Queries.WalletQueriesTest do
 
       assert expected === response
     end
-  end
 
-  test "It should return a list of wallets with their users", %{conn: _conn} do
-    wallet = insert(:wallet)
+    test "It should return a list of wallets with their users", %{conn: _conn} do
+      wallet = insert(:wallet)
 
-    {:ok, response} =
-      Absinthe.run(@wallets_query_with_user, PaymentServerWeb.Schema)
+      {:ok, response} =
+        Absinthe.run(@wallets_query_with_user, PaymentServerWeb.Schema)
 
-    expected =
-      %{
-        data: %{
-          "wallets" => [
-            %{
-              "id" => Integer.to_string(wallet.id),
-              "currency" => Atom.to_string(wallet.currency),
-              "units" => units_to_string(wallet.units),
-              "user" => %{
-                "email" => wallet.user.email,
-                "name" => wallet.user.name
+      expected =
+        %{
+          data: %{
+            "wallets" => [
+              %{
+                "id" => Integer.to_string(wallet.id),
+                "currency" => Atom.to_string(wallet.currency),
+                "units" => units_to_string(wallet.units),
+                "user" => %{
+                  "email" => wallet.user.email,
+                  "name" => wallet.user.name
+                }
               }
-            }
-          ]
+            ]
+          }
         }
-      }
 
-    assert expected === response
-  end
+      assert expected === response
+    end
 
-  test "it should return a list of wallets by currency", %{conn: _conn} do
-    insert_list(3, :wallet, %{currency: :EUR})
-    insert(:wallet, currency: :USD)
+    test "it should return a list of wallets by currency", %{conn: _conn} do
+      insert_list(3, :wallet, %{currency: :EUR})
+      insert(:wallet, currency: :USD)
 
-    {:ok, response} =
-      Absinthe.run(@wallets_by_currency_query, PaymentServerWeb.Schema)
+      {:ok, response} =
+        Absinthe.run(@wallets_by_currency_query, PaymentServerWeb.Schema)
 
-    wallets = get_in(response, [:data, "wallets_by_currency"])
+      wallets = get_in(response, [:data, "wallets_by_currency"])
 
-    assert 3 == length(wallets)
+      assert 3 == length(wallets)
+    end
   end
 end
