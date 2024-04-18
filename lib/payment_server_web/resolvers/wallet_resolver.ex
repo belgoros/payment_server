@@ -55,15 +55,15 @@ defmodule PaymentServerWeb.Graphql.Resolvers.WalletResolver do
         {:error,
          message: "Could not send money", details: ChangesetErrors.error_details(changeset)}
 
-      {:ok, wallet} ->
-        publish_wallet_worth_changed(sender_wallet)
-        publish_wallet_worth_changed(receiver_wallet)
+      {:ok, %{update_sender: updated_sender, update_receiver: updated_receiver} = _result} ->
+        publish_wallet_worth_changed(updated_sender)
+        publish_wallet_worth_changed(updated_receiver)
 
         {:ok,
          %{
-           wallet: wallet,
+           wallet: updated_receiver,
            amount_received: amount,
-           currency: sender_wallet.currency,
+           currency: updated_sender.currency,
            sender_wallet_id: sender_wallet_id
          }}
     end

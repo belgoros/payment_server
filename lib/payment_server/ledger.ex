@@ -3,7 +3,6 @@ defmodule PaymentServer.Ledger do
   Module to register payment transactions between wallets
   """
 
-  alias alias PaymentServer.Accounts
   alias alias PaymentServer.Accounts.Wallet
   alias PaymentServer.Exchange.ApiEnvironmentHandler
 
@@ -12,12 +11,29 @@ defmodule PaymentServer.Ledger do
       raise_wallet_credit_error(sender_wallet, amount)
     else
       converted_amount = convert_amount(sender_wallet, receiver_wallet, amount)
-      update_wallet(sender_wallet, %{units: Decimal.sub(sender_wallet.units, amount)})
 
-      update_wallet(receiver_wallet, %{
-        units: Decimal.add(converted_amount, receiver_wallet.units)
-      })
+      result =
+        Ecto.Multi.new()
+        |> Ecto.Multi.update(
+          :update_sender,
+          update_sender_step(sender_wallet, amount)
+        )
+        |> Ecto.Multi.update(
+          :update_receiver,
+          update_receiver_step(receiver_wallet, converted_amount)
+        )
+        |> PaymentServer.Repo.transaction()
+
+      result
     end
+  end
+
+  defp update_sender_step(%Wallet{} = sender_wallet, amount) do
+    Ecto.Changeset.change(sender_wallet, units: Decimal.sub(sender_wallet.units, amount))
+  end
+
+  defp update_receiver_step(%Wallet{} = receiver_wallet, amount) do
+    Ecto.Changeset.change(receiver_wallet, units: Decimal.add(amount, receiver_wallet.units))
   end
 
   defp raise_wallet_credit_error(sender_wallet, amount) do
@@ -33,15 +49,6 @@ defmodule PaymentServer.Ledger do
     {:error, changeset}
   end
 
-  defp exchange_rate(from_currency, to_currency) do
-    %{rate: rate} = ApiEnvironmentHandler.get_rate(from_currency, to_currency)
-    rate
-  end
-
-  defp update_wallet(%Wallet{} = wallet, attrs) do
-    Accounts.update_wallet(wallet, attrs)
-  end
-
   defp convert_amount(sender_wallet, receiver_wallet, amount) do
     rate =
       if sender_wallet.currency == receiver_wallet.currency do
@@ -53,5 +60,10 @@ defmodule PaymentServer.Ledger do
     rate
     |> Decimal.from_float()
     |> Decimal.mult(amount)
+  end
+
+  defp exchange_rate(from_currency, to_currency) do
+    %{rate: rate} = ApiEnvironmentHandler.get_rate(from_currency, to_currency)
+    rate
   end
 end
