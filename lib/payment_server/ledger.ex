@@ -3,7 +3,8 @@ defmodule PaymentServer.Ledger do
   Module to register payment transactions between wallets
   """
 
-  alias alias PaymentServer.Accounts.Wallet
+  alias PaymentServer.Accounts
+  alias PaymentServer.Accounts.Wallet
   alias PaymentServer.Exchange.ApiEnvironmentHandler
 
   def send_money(%Wallet{} = sender_wallet, %Wallet{} = receiver_wallet, amount) do
@@ -29,11 +30,11 @@ defmodule PaymentServer.Ledger do
   end
 
   defp update_sender_step(%Wallet{} = sender_wallet, amount) do
-    Ecto.Changeset.change(sender_wallet, units: Decimal.sub(sender_wallet.units, amount))
+    Accounts.change_wallet(sender_wallet, %{units: Decimal.sub(sender_wallet.units, amount)})
   end
 
   defp update_receiver_step(%Wallet{} = receiver_wallet, amount) do
-    Ecto.Changeset.change(receiver_wallet, units: Decimal.add(amount, receiver_wallet.units))
+    Accounts.change_wallet(receiver_wallet, %{units: Decimal.add(amount, receiver_wallet.units)})
   end
 
   defp raise_wallet_credit_error(sender_wallet, amount) do
