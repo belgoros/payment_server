@@ -22,10 +22,10 @@ defmodule PaymentServer.Exchange.RatesMonitor do
     GenServer.start_link(__MODULE__, %State{}, opts)
   end
 
-  def get_rates(pid \\ @default_server, from_currency, to_currency) do
+  def get_rate(pid \\ @default_server, from_currency, to_currency) do
     GenServer.call(
       pid,
-      {:get_rates, %State{from_currency: from_currency, to_currency: to_currency}}
+      {:get_rate, %State{from_currency: from_currency, to_currency: to_currency}}
     )
   end
 
@@ -46,7 +46,7 @@ defmodule PaymentServer.Exchange.RatesMonitor do
   end
 
   @impl true
-  def handle_call({:get_rates, state}, _from, old_state) do
+  def handle_call({:get_rate, state}, _from, old_state) do
     new_state = old_state
     to_caller = fetch_rate(state)
     {:reply, to_caller, new_state}
