@@ -5,10 +5,11 @@ defmodule PaymentServer.Accounts.Wallet do
 
   alias PaymentServer.Accounts.User
 
-  @accepted_currencies [:EUR, :USD, :CAD, :GBP]
-
   schema "wallets" do
-    field :currency, Ecto.Enum, values: @accepted_currencies
+    field :currency, Ecto.Enum,
+      values:
+        Application.compile_env(:payment_server, :accepted_currencies, [:EUR, :USD, :CAD, :GBP])
+
     field :units, :decimal, default: Decimal.from_float(0.0)
     belongs_to :user, User
 

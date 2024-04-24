@@ -33,7 +33,8 @@ config :payment_server,
   exchange_server_options: [
     apikey: "demo",
     function: "CURRENCY_EXCHANGE_RATE"
-  ]
+  ],
+  accepted_currencies: [:EUR, :USD, :CAD, :GBP]
 
 # ecto_shorts settings
 config :ecto_shorts,
