@@ -30,6 +30,7 @@ config :phoenix, :json_library, Jason
 
 # Alpha Vantage settings
 config :payment_server,
+  exchange_server_api_url: "http://localhost:4001/query",
   exchange_server_options: [
     apikey: "demo",
     function: "CURRENCY_EXCHANGE_RATE"
