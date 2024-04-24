@@ -58,12 +58,16 @@ defmodule PaymentServer.Ledger do
         exchange_rate(sender_wallet.currency, receiver_wallet.currency)
       end
 
+    convert_amount_by_rate(rate, amount)
+  end
+
+  def convert_amount_by_rate(rate, amount) do
     rate
     |> Decimal.from_float()
     |> Decimal.mult(amount)
   end
 
-  defp exchange_rate(from_currency, to_currency) do
+  def exchange_rate(from_currency, to_currency) do
     %{rate: rate} = ApiEnvironmentHandler.get_rate(from_currency, to_currency)
     rate
   end
