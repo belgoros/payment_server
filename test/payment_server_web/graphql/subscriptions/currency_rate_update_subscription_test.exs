@@ -26,7 +26,7 @@ defmodule PaymentServerWeb.Graphql.Subscriptions.CurrencyRateUpdateSubscriptionT
 
   @currency_update_subscription """
     subscription {
-      currencyRateUpdate(currency: "eur") {
+      currencyRateUpdate(currency: EUR) {
         id
         units
         currency
@@ -41,7 +41,7 @@ defmodule PaymentServerWeb.Graphql.Subscriptions.CurrencyRateUpdateSubscriptionT
 
   @wallets_by_currency_query """
   query {
-    walletsByCurrency(currency: "eur") {
+    walletsByCurrency(currency: EUR) {
       id
       units
       currency

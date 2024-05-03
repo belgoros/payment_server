@@ -27,8 +27,8 @@ defmodule PaymentServerWeb.ConnCase do
       # Import conveniences for testing with connections
       import Plug.Conn
       import Phoenix.ConnTest
-      import PaymentServerWeb.ConnCase
       import PaymentServer.Factory
+      import PaymentServer.TestHelpers
     end
   end
 

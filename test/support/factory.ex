@@ -13,7 +13,7 @@ defmodule PaymentServer.Factory do
 
   def wallet_factory do
     %Wallet{
-      units: 100.0,
+      units: Decimal.from_float(100.00),
       currency: :EUR,
       user: build(:user)
     }

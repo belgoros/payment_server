@@ -5,8 +5,8 @@ defmodule PaymentServer.Accounts do
 
   import Ecto.Query, warn: false
   alias PaymentServer.Repo
-
   alias PaymentServer.Accounts.{User, Wallet}
+  alias EctoShorts.Actions
 
   @doc """
   Returns the list of users.
@@ -21,43 +21,17 @@ defmodule PaymentServer.Accounts do
     Repo.all(User)
   end
 
-  def send_money(%Wallet{} = sender_wallet, %Wallet{} = receiver_wallet, amount) do
-    if sender_wallet.units < amount,
-      do: raise("Wallet credit is insufficient to send #{amount} #{sender_wallet.currency}!")
+  @doc """
+  Returns the list of wallets for a specific User ID.
 
-    converted_amount = exchange_rate(sender_wallet.currency, receiver_wallet.currency) * amount
+  ## Examples
 
-    update_wallet(receiver_wallet, %{units: converted_amount + receiver_wallet.units})
-  end
+      iex> get_user_wallets(123)
+      [%Wallet{}, ...]
 
-  def total_worth_of_wallets_for(%User{} = user, to_currency) do
-    user_wallets = get_user_wallets(user.id)
-    non_convertible_wallets = Enum.filter(user_wallets, &(&1.currency == to_currency))
-    convertible_wallets = user_wallets -- non_convertible_wallets
-
-    converted_amount = get_converted_amount(convertible_wallets, to_currency)
-    non_converted_amount = Enum.map(non_convertible_wallets, & &1.units) |> Enum.sum()
-
-    converted_amount + non_converted_amount
-  end
-
-  defp get_converted_amount(wallets_to_convert, to_currency) do
-    wallets_to_convert
-    |> Enum.reduce(0, fn wallet, acc ->
-      wallet.units * exchange_rate(wallet.currency, to_currency) + acc
-    end)
-  end
-
-  defp exchange_rate(from_currency, to_currency) do
-    rates_monitor_rates =
-      PaymentServer.Exchange.RatesMonitor.get_rates(from_currency, to_currency)
-
-    rates_monitor_rates.rate
-  end
-
-  defp get_user_wallets(id) do
-    query = from(w in Wallet, where: w.user_id == ^id)
-    Repo.all(query)
+  """
+  def get_user_wallets(user_id) do
+    Actions.all(Wallet, %{user_id: user_id})
   end
 
   @doc """
@@ -170,12 +144,16 @@ defmodule PaymentServer.Accounts do
   """
   def get_wallet!(id), do: Repo.get!(Wallet, id)
 
-  def find_wallet_by_currency(currency) do
-    currency = currency |> String.upcase() |> String.to_atom()
+  @doc """
+  Returns the list of wallets for the specific currency
 
-    Wallet
-    |> where(currency: ^currency)
-    |> Repo.all()
+  ## Examples
+
+      iex> find_wallets_by_currency(:USD)
+      [%Wallet{}, ...]
+  """
+  def find_wallets_by_currency(currency) do
+    Actions.all(Wallet, %{currency: currency})
   end
 
   @doc """

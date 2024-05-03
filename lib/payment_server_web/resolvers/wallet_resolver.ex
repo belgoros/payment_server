@@ -2,6 +2,8 @@ defmodule PaymentServerWeb.Graphql.Resolvers.WalletResolver do
   @moduledoc false
   alias PaymentServer.Accounts
   alias PaymentServerWeb.Graphql.Schema.ChangesetErrors
+  alias PaymentServer.Ledger.Transaction
+  alias PaymentServer.Ledger
 
   def list_wallets(_parent, _args, _resolution) do
     wallets = Accounts.list_wallets()
@@ -9,8 +11,8 @@ defmodule PaymentServerWeb.Graphql.Resolvers.WalletResolver do
     {:ok, wallets}
   end
 
-  def find_wallet_by_currency(_parent, %{currency: currency}, _resolution) do
-    wallets_by_currency = Accounts.find_wallet_by_currency(currency)
+  def find_wallets_by_currency(_parent, %{currency: currency}, _resolution) do
+    wallets_by_currency = Accounts.find_wallets_by_currency(currency)
 
     Enum.each(wallets_by_currency, &publish_currency_updated(&1))
 
@@ -31,7 +33,7 @@ defmodule PaymentServerWeb.Graphql.Resolvers.WalletResolver do
   def total_worth_in_currency(_parent, %{user_id: user_id, currency: currency}, _resolution) do
     total =
       Accounts.get_user!(user_id)
-      |> Accounts.total_worth_of_wallets_for(currency)
+      |> Transaction.total_worth_of_wallets_for(currency)
 
     {:ok, %{currency: currency, total: total}}
   end
@@ -47,22 +49,21 @@ defmodule PaymentServerWeb.Graphql.Resolvers.WalletResolver do
       ) do
     sender_wallet = Accounts.get_wallet!(sender_wallet_id)
     receiver_wallet = Accounts.get_wallet!(receiver_wallet_id)
-    {:ok, Accounts.send_money(sender_wallet, receiver_wallet, amount)}
 
-    case Accounts.send_money(sender_wallet, receiver_wallet, amount) do
+    case Ledger.send_money(sender_wallet, receiver_wallet, amount) do
       {:error, changeset} ->
         {:error,
          message: "Could not send money", details: ChangesetErrors.error_details(changeset)}
 
-      {:ok, wallet} ->
-        publish_wallet_worth_changed(sender_wallet)
-        publish_wallet_worth_changed(receiver_wallet)
+      {:ok, %{update_sender: updated_sender, update_receiver: updated_receiver} = _result} ->
+        publish_wallet_worth_changed(updated_sender)
+        publish_wallet_worth_changed(updated_receiver)
 
         {:ok,
          %{
-           wallet: wallet,
+           wallet: updated_receiver,
            amount_received: amount,
-           currency: sender_wallet.currency,
+           currency: updated_sender.currency,
            sender_wallet_id: sender_wallet_id
          }}
     end
@@ -77,15 +78,10 @@ defmodule PaymentServerWeb.Graphql.Resolvers.WalletResolver do
   end
 
   def publish_currency_updated(wallet) do
-    currency =
-      wallet.currency
-      |> Atom.to_string()
-      |> String.downcase()
-
     Absinthe.Subscription.publish(
       PaymentServerWeb.Endpoint,
       wallet,
-      currency_rate_update: "currency-#{currency}"
+      currency_rate_update: "currency-#{wallet.currency}"
     )
   end
 

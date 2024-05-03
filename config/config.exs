@@ -30,10 +30,17 @@ config :phoenix, :json_library, Jason
 
 # Alpha Vantage settings
 config :payment_server,
+  exchange_server_api_url: "http://localhost:4001/query",
   exchange_server_options: [
-    api_key: "demo",
+    apikey: "demo",
     function: "CURRENCY_EXCHANGE_RATE"
-  ]
+  ],
+  accepted_currencies: [:EUR, :USD, :CAD, :GBP]
+
+# ecto_shorts settings
+config :ecto_shorts,
+  repo: PaymentServer.Repo,
+  error_module: EctoShorts.Actions.Error
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.

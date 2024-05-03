@@ -9,15 +9,7 @@ defmodule PaymentServerWeb.Graphql.Types.WalletType do
   object :wallet do
     field(:id, non_null(:id))
     field(:currency, non_null(:currency_type))
-    field :units, :float
+    field :units, :decimal
     field :user, non_null(:user), resolve: dataloader(Accounts)
-  end
-
-  @desc "Accepted currency values"
-  enum :currency_type do
-    value(:EUR)
-    value(:USD)
-    value(:BTC)
-    value(:CAT)
   end
 end

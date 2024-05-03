@@ -48,33 +48,33 @@ defmodule PaymentServerWeb.Graphql.Queries.UserQueriesTest do
 
       assert expected === response
     end
-  end
 
-  test "It should display a list of users with their wallets", %{conn: _conn} do
-    wallet = insert(:wallet)
+    test "It should display a list of users with their wallets", %{conn: _conn} do
+      wallet = insert(:wallet)
 
-    {:ok, response} =
-      Absinthe.run(@users_query_with_wallets, PaymentServerWeb.Schema)
+      {:ok, response} =
+        Absinthe.run(@users_query_with_wallets, PaymentServerWeb.Schema)
 
-    expected =
-      %{
-        data: %{
-          "users" => [
-            %{
-              "id" => Integer.to_string(wallet.user.id),
-              "email" => wallet.user.email,
-              "name" => wallet.user.name,
-              "wallets" => [
-                %{
-                  "currency" => Atom.to_string(wallet.currency),
-                  "units" => wallet.units
-                }
-              ]
-            }
-          ]
+      expected =
+        %{
+          data: %{
+            "users" => [
+              %{
+                "id" => Integer.to_string(wallet.user.id),
+                "email" => wallet.user.email,
+                "name" => wallet.user.name,
+                "wallets" => [
+                  %{
+                    "currency" => Atom.to_string(wallet.currency),
+                    "units" => units_to_string(wallet.units)
+                  }
+                ]
+              }
+            ]
+          }
         }
-      }
 
-    assert expected === response
+      assert expected === response
+    end
   end
 end

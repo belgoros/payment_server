@@ -4,7 +4,7 @@ defmodule PaymentServerWeb.Graphql.Types.WalletsTotalType do
 
   @desc "Wallets total worth in currency"
   object :wallets_total do
-    field :total, :float
-    field :currency, :string
+    field :total, :decimal
+    field :currency, :currency_type
   end
 end

@@ -4,8 +4,7 @@ defmodule PaymentServer.Exchange.RatesMonitor do
   """
   use GenServer
 
-  # alias PaymentServer.Exchange.AlphaVantageApi
-  alias PaymentServer.Exchange.Parser
+  alias PaymentServer.Exchange.ApiEnvironmentHandler
 
   @default_server :rates_monitor
   @refresh_interval :timer.seconds(5)
@@ -23,33 +22,33 @@ defmodule PaymentServer.Exchange.RatesMonitor do
     GenServer.start_link(__MODULE__, %State{}, opts)
   end
 
-  def get_rates(pid \\ @default_server, from_currency, to_currency) do
+  def get_rate(pid \\ @default_server, from_currency, to_currency) do
     GenServer.call(
       pid,
-      {:get_rates, %State{from_currency: from_currency, to_currency: to_currency}}
+      {:get_rate, %State{from_currency: from_currency, to_currency: to_currency}}
     )
   end
 
   # Server Callbacks
   @impl true
   def init(old_state) do
-    exchange_rates = fetch_rates(old_state)
-    initial_state = Map.merge(old_state, exchange_rates)
+    exchange_rate = fetch_rate(old_state)
+    initial_state = Map.merge(old_state, exchange_rate)
     schedule_refresh()
     {:ok, initial_state}
   end
 
   @impl true
   def handle_info(:refresh, state) do
-    new_state = fetch_rates(state)
+    new_state = fetch_rate(state)
     schedule_refresh()
     {:noreply, new_state}
   end
 
   @impl true
-  def handle_call({:get_rates, state}, _from, old_state) do
+  def handle_call({:get_rate, state}, _from, old_state) do
     new_state = old_state
-    to_caller = fetch_rates(state)
+    to_caller = fetch_rate(state)
     {:reply, to_caller, new_state}
   end
 
@@ -57,12 +56,8 @@ defmodule PaymentServer.Exchange.RatesMonitor do
     Process.send_after(self(), :refresh, @refresh_interval)
   end
 
-  defp fetch_rates(%{from_currency: from_currency, to_currency: to_currency} = state) do
-    api_module =
-      Application.get_env(:payment_server, :api_module, PaymentServer.Exchange.AlphaVantageApi)
-
-    response = api_module.get_rates(from_currency, to_currency)
-    rate = Parser.parse(response)
+  defp fetch_rate(%{from_currency: from_currency, to_currency: to_currency} = state) do
+    %{rate: rate} = ApiEnvironmentHandler.get_rate(from_currency, to_currency)
 
     %{state | from_currency: from_currency, to_currency: to_currency, rate: rate}
   end

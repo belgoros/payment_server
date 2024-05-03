@@ -1,16 +1,10 @@
 defmodule PaymentServer.Exchange.MockAlphaVantageApiTest do
   use ExUnit.Case, async: true
 
-  test "it should call mocked API" do
-    api_module =
-      Application.get_env(
-        :payment_server,
-        :api_module,
-        PaymentServer.Exchange.MockAlphaVantageApi
-      )
+  alias PaymentServer.Exchange.ApiEnvironmentHandler
 
-    response = api_module.get_rates("eur", "usd")
-    %{status: status} = response
-    assert status == 200
+  test "it should call mocked API" do
+    %{rate: rate} = ApiEnvironmentHandler.get_rate("eur", "usd")
+    assert rate == 2.0
   end
 end
