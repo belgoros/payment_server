@@ -17,9 +17,7 @@ defmodule PaymentServerWeb.Graphql.Resolvers.UserResolver do
         {:error,
          message: "Could not create user", details: ChangesetErrors.error_details(changeset)}
 
-      {:ok, user} = user_response ->
-        {:ok, user}
-
+      {:ok, _user} = user_response ->
         user_response
     end
   end
