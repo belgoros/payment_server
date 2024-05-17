@@ -4,7 +4,7 @@ defmodule PaymentServer.Exchange.RatesMonitor do
   """
   use GenServer
 
-  alias PaymentServer.Exchange.ApiEnvironmentHandler
+  alias PaymentServer.Exchange
 
   @default_server :rates_monitor
   @refresh_interval :timer.seconds(5)
@@ -57,7 +57,7 @@ defmodule PaymentServer.Exchange.RatesMonitor do
   end
 
   defp fetch_rate(%{from_currency: from_currency, to_currency: to_currency} = state) do
-    %{rate: rate} = ApiEnvironmentHandler.get_rate(from_currency, to_currency)
+    %{rate: rate} = Exchange.get_rate(from_currency, to_currency)
 
     %{state | from_currency: from_currency, to_currency: to_currency, rate: rate}
   end
