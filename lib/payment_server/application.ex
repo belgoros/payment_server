@@ -19,6 +19,7 @@ defmodule PaymentServer.Application do
       {Absinthe.Subscription, PaymentServerWeb.Endpoint},
       # Start a worker by calling: PaymentServer.Worker.start_link(arg)
       # {PaymentServer.Worker, arg}
+      {Task.Supervisor, name: PaymentServer.RatesMonitorTaskSupervisor},
       {PaymentServer.Exchange.RatesMonitor, []}
     ]
 
