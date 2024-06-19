@@ -4,7 +4,7 @@ defmodule PaymentServer.Exchange.RatesMonitor do
   """
   use GenServer
 
-  alias PaymentServer.Exchange.ApiEnvironmentHandler
+  alias PaymentServer.Exchange
 
   @default_server :rates_monitor
   @refresh_interval :timer.seconds(5)
@@ -46,10 +46,17 @@ defmodule PaymentServer.Exchange.RatesMonitor do
   end
 
   @impl true
-  def handle_call({:get_rate, state}, _from, old_state) do
-    new_state = old_state
-    to_caller = fetch_rate(state)
-    {:reply, to_caller, new_state}
+  def handle_call(
+        {:get_rate, %State{from_currency: from_currency, to_currency: to_currency}},
+        _from,
+        state
+      ) do
+    task =
+      Task.Supervisor.async_nolink(PaymentServer.RatesMonitorTaskSupervisor, fn ->
+        Exchange.get_rate(from_currency, to_currency)
+      end)
+
+    {:reply, Task.await(task), state}
   end
 
   defp schedule_refresh do
@@ -57,7 +64,7 @@ defmodule PaymentServer.Exchange.RatesMonitor do
   end
 
   defp fetch_rate(%{from_currency: from_currency, to_currency: to_currency} = state) do
-    %{rate: rate} = ApiEnvironmentHandler.get_rate(from_currency, to_currency)
+    %{rate: rate} = Exchange.get_rate(from_currency, to_currency)
 
     %{state | from_currency: from_currency, to_currency: to_currency, rate: rate}
   end

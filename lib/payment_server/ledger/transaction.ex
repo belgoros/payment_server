@@ -22,8 +22,7 @@ defmodule PaymentServer.Ledger.Transaction do
   end
 
   defp get_converted_amount(wallets_to_convert, to_currency) do
-    wallets_to_convert
-    |> Enum.reduce(0, fn wallet, acc ->
+    Enum.reduce(wallets_to_convert, 0, fn wallet, acc ->
       convert_wallet_units(wallet, to_currency, acc)
     end)
   end
